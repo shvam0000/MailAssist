@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
@@ -17,10 +17,16 @@ collection = db.get_collection('emails')
 def home():
     return jsonify({'message': 'Hello, Flask!!'})
 
-@app.route('/data', methods=['GET'])
-def get_data():
-    data = list(collection.find({}, {'_id': 0}))  # Exclude _id
+@app.route('/fetch-emails', methods=['GET'])
+def get_emails():
+    data = list(collection.find({}, {'_id': 0}))
     return jsonify(data)
+
+@app.route('/add-email', methods=['POST'])
+def add_email():
+    data = request.json
+    collection.insert_one(data)
+    return jsonify({'message': 'Email added successfully'})
 
 if __name__ == '__main__':
     app.run(debug=True)
