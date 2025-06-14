@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MailAssist Task Pane</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .feature-button {
+        @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 w-full;
+      }
+      /* Custom styles for EmailAccordion */
+      .accordion-item {
+        @apply bg-white p-4 rounded-lg shadow-sm mb-2;
+      }
+      .accordion-header {
+        @apply flex justify-between items-center cursor-pointer font-semibold text-gray-800;
+      }
+      .accordion-content {
+        @apply mt-2 text-gray-700;
+      }
+    </style>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+      <h1 class="text-2xl font-bold text-gray-800 mb-4" id="content-title">
+        Loading...
+      </h1>
+      <div id="content-display" class="text-gray-700 text-lg"></div>
+      <div
+        id="error-message"
+        class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4"
+        role="alert"
+      >
+        <strong class="font-bold">Error:</strong>
+        <span class="block sm:inline" id="error-text"></span>
+      </div>
+    </div>
+
+    <script type="text/babel">
+      // IMPORTANT: Replace 'http://127.0.0.1:5000' with your Flask app's publicly accessible URL
+      const FLASK_API_BASE_URL = 'http://127.0.0.1:5000';
+
+      // This is your EmailAccordion component, converted to plain React.
+      const EmailAccordion = ({ email, formatDate }) => {
+        const [isOpen, setIsOpen] = React.useState(false);
+
+        return (
+          <div className="accordion-item border border-gray-200">
+            <div
+              className="accordion-header"
+              onClick={() => setIsOpen(!isOpen)}>
+              <span>Subject: {email.subject}</span>
+              <span>{isOpen ? '▲' : '▼'}</span>
+            </div>
+            {isOpen && (
+              <div className="accordion-content">
+                <p>
+                  <strong>From:</strong> {email.sender}
+                </p>
+                <p>
+                  <strong>To:</strong>{' '}
+                  {email.recipient ||
+                    (email.recipients && email.recipients.join(', ')) ||
+                    'N/A'}
+                </p>
+                <p>
+                  <strong>Date:</strong> {formatDate(email.timestamp)}
+                </p>
+                <div className="mt-2 p-2 bg-gray-50 rounded-md overflow-auto max-h-40">
+                  <p>{email.body}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      // This is your HomePage component, converted to plain React and renamed for clarity.
+      const EmailDisplayComponent = () => {
+        const [emails, setEmails] = React.useState([]);
+        const [searchQuery, setSearchQuery] = React.useState('');
+        const [isLoading, setIsLoading] = React.useState(true);
+        const [fetchError, setFetchError] = React.useState(null);
+
+        React.useEffect(() => {
+          const fetchEmails = async () => {
+            setIsLoading(true);
+            setFetchError(null);
+            try {
+              const response = await fetch(
+                `${FLASK_API_BASE_URL}/fetch-emails`
+              );
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              const data = await response.json();
+              console.log('Fetched email data:', data);
+              setEmails(data);
+            } catch (error) {
+              console.error('Error fetching emails:', error);
+              setFetchError(
+                `Failed to load emails: ${error.message}. Ensure your Flask app is running and accessible.`
+              );
+            } finally {
+              setIsLoading(false);
+            }
+          };
+          fetchEmails();
+        }, []);
+
+        const formatDate = (dateString) => {
+          try {
+            const dateObj = new Date(dateString);
+            if (isNaN(dateObj.getTime())) {
+              // Check for invalid date
+              return 'Invalid Date';
+            }
+            return dateObj.toLocaleString();
+          } catch (e) {
+            return 'Invalid Date Format';
+          }
+        };
+
+        const filteredEmails = emails.filter((email) => {
+          const searchLower = searchQuery.toLowerCase();
+          return (
+            (email.subject &&
+              email.subject.toLowerCase().includes(searchLower)) ||
+            (email.sender &&
+              email.sender.toLowerCase().includes(searchLower)) ||
+            (email.body && email.body.toLowerCase().includes(searchLower))
+          );
+        });
+
+        return (
+          <div className="p-4">
+            <h1 className="text-3xl font-bold mb-4 text-left">
+              Forwarded Emails
+            </h1>
+            <div className="relative w-full max-w-lg mb-6">
+              <div className="absolute inset-y-0 left-1 flex items-center pointer-events-none">
+                {/* Simple Search Icon SVG */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor">
+                  <path
+                    fillRule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search emails"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 border border-gray-300"
+              />
+            </div>
+
+            {isLoading && (
+              <p className="text-center text-indigo-700">Loading emails...</p>
+            )}
+            {fetchError && (
+              <p className="text-center text-red-500">{fetchError}</p>
+            )}
+
+            {!isLoading && !fetchError && (
+              <div>
+                {filteredEmails.length > 0 ? (
+                  filteredEmails.map((email, index) => (
+                    <EmailAccordion
+                      key={email.timestamp + index}
+                      email={email}
+                      formatDate={formatDate}
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-600 text-center">
+                    No emails found or all features are disabled.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      };
+    </script>
+
+    <script type="module">
+      // IMPORTANT: Replace 'http://127.0.0.1:5000' with your Flask app's publicly accessible URL
+      // const FLASK_API_BASE_URL = 'http://127.0.0.1:5000';
+
+      const contentTitle = document.getElementById('content-title');
+      const contentDisplay = document.getElementById('content-display');
+      const errorMessage = document.getElementById('error-message');
+      const errorText = document.getElementById('error-text');
+
+      // Function to display error messages
+      function showError(text) {
+        errorMessage.classList.remove('hidden');
+        errorText.textContent = text;
+      }
+
+      // Function to get query parameter
+      function getQueryParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      /**
+       * Fetches feature flags from the Flask API.
+       * @returns {Promise<Object>} An object with feature flags (e.g., { starWarsEnabled: true, ... }).
+       */
+      async function fetchFeatureFlags() {
+        try {
+          const response = await fetch(`${FLASK_API_BASE_URL}/feature-flags`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const flags = await response.json();
+          console.log('Fetched feature flags from Flask:', flags);
+          return flags;
+        } catch (error) {
+          console.error('Error fetching feature flags from Flask:', error);
+          showError(
+            `Failed to load feature configuration: ${error.message}. Ensure Flask API is accessible.`
+          );
+          // Return default disabled state on error
+          return {
+            starWarsEnabled: false,
+            emailDataEnabled: false,
+            catFactsEnabled: false,
+          };
+        }
+      }
+
+      // Function to load content based on type and feature flags
+      function loadFeatureContent(requestedType, featureFlags) {
+        let isEnabled = false;
+        let contentUrl = '';
+        let title = '';
+
+        // Map the feature ID to its content URL and title
+        const featureDetails = {
+          starwars: {
+            enabledFlag: 'starWarsEnabled',
+            url: 'https://d3bom75t08e7rj.cloudfront.net/swapi.html',
+            title: 'Star Wars Data',
+          },
+          email: {
+            enabledFlag: 'emailDataEnabled',
+            component: true,
+            title: 'Email Data',
+          }, // 'component: true' indicates React component
+          catfacts: {
+            enabledFlag: 'catFactsEnabled',
+            url: 'https://d3bom75t08e7rj.cloudfront.net/cats.html',
+            title: 'Cat Facts',
+          },
+        };
+
+        const selectedFeature = featureDetails[requestedType];
+
+        if (!selectedFeature) {
+          contentTitle.textContent = 'Unknown Feature';
+          contentDisplay.innerHTML = `<p>The requested feature is not recognized.</p>`;
+          return;
+        }
+
+        isEnabled = featureFlags[selectedFeature.enabledFlag];
+        contentUrl = selectedFeature.url;
+        title = selectedFeature.title;
+
+        contentTitle.textContent = title;
+
+        if (isEnabled) {
+          if (selectedFeature.component) {
+            // Render the React component for Email Data
+            // Note: React and ReactDOM are available globally due to CDN imports in <head>
+            ReactDOM.render(
+              React.createElement(EmailDisplayComponent, null),
+              contentDisplay
+            );
+          } else {
+            // Load content into an iframe for other features
+            contentDisplay.innerHTML = `
+                        <p class="text-gray-600 mb-2">Feature is <span class="font-semibold text-green-600">ENABLED</span>.</p>
+                        <div class="border rounded-md p-4 bg-white text-left overflow-hidden">
+                            <iframe src="${contentUrl}" class="w-full h-96 border-none rounded-md"></iframe>
+                        </div>
+                    `;
+          }
+        } else {
+          contentDisplay.innerHTML = `
+                    <p class="text-red-500 font-semibold mb-2">This feature is currently DISABLED by the administrator.</p>
+                    <p class="text-gray-600">Please contact your administrator to enable it.</p>
+                `;
+          // If React component was rendered, unmount it when disabled
+          if (selectedFeature.component && contentDisplay.children.length > 0) {
+            ReactDOM.unmountComponentAtNode(contentDisplay);
+          }
+        }
+      }
+
+      // Function to generate buttons for enabled features when no direct type is passed (for mobile/generic open)
+      async function generateFeatureButtons(featureFlags) {
+        contentTitle.textContent = 'Select a Feature';
+        let buttonsHtml = '<div class="space-y-4">';
+        const features = [
+          {
+            id: 'starwars',
+            label: 'Star Wars Data',
+            enabled: featureFlags.starWarsEnabled,
+          },
+          {
+            id: 'email',
+            label: 'Email Data',
+            enabled: featureFlags.emailDataEnabled,
+          },
+          {
+            id: 'catfacts',
+            label: 'Cat Facts',
+            enabled: featureFlags.catFactsEnabled,
+          },
+        ];
+
+        const enabledFeatures = features.filter((f) => f.enabled);
+
+        if (enabledFeatures.length > 0) {
+          enabledFeatures.forEach((feature) => {
+            buttonsHtml += `
+                        <button class="feature-button" data-type="${feature.id}">${feature.label}</button>
+                    `;
+          });
+        } else {
+          buttonsHtml += `<p class="text-gray-600">No features are currently enabled. Please contact your administrator.</p>`;
+        }
+
+        contentDisplay.innerHTML = buttonsHtml;
+
+        // Add event listeners to the dynamically created buttons
+        contentDisplay.querySelectorAll('.feature-button').forEach((button) => {
+          button.addEventListener('click', (event) => {
+            const type = event.target.dataset.type;
+            loadFeatureContent(type, featureFlags); // Load specific content based on clicked button
+          });
+        });
+      }
+
+      async function handleTaskPaneDisplay() {
+        // Fetch feature flags from Flask API
+        const featureFlags = await fetchFeatureFlags();
+        const requestedType = getQueryParameter('type');
+
+        if (requestedType) {
+          // If a specific type was requested (typically from desktop dropdowns)
+          loadFeatureContent(requestedType, featureFlags);
+        } else {
+          // If no specific type was requested (typically from mobile button or generic desktop open)
+          generateFeatureButtons(featureFlags);
+        }
+      }
+
+      // Initialize on window load
+      window.onload = async () => {
+        // No Firebase initialization needed here anymore
+        await handleTaskPaneDisplay();
+      };
+
+      // No unsubscribe needed as we're not using real-time listeners for flags
+    </script>
+  </body>
+</html>
