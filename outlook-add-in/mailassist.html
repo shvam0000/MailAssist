@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MailAssist Dashboard</title>
+    <!-- Office.js must be loaded first -->
+    <script
+      type="text/javascript"
+      src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"
+    ></script>
+    <!-- Then your other scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-50">
@@ -119,6 +125,8 @@
               <span class="text-xs text-gray-500 email-timestamp"></span>
             </div>
             <p class="mt-1 text-sm text-gray-600 email-recipient"></p>
+            <p class="mt-1 text-sm text-gray-600 email-sender"></p>
+            <p class="mt-2 text-sm text-gray-500 email-body-preview"></p>
           </div>
           <button
             class="send-button px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
