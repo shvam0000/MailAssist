@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MailAssist Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+      <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">MailAssist</h1>
+      </header>
+
+      <!-- Loading Spinner -->
+      <div
+        id="loadingSpinner"
+        class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center"
+        >
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
+          ></div>
+          <p class="text-gray-700">Processing your request...</p>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div
+        id="successMessage"
+        class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center"
+        >
+          <svg
+            class="w-16 h-16 text-green-500 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+          <p class="text-gray-700 text-lg mb-4">
+            Email successfully processed!
+          </p>
+          <button
+            id="goToDashboard"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div
+        id="errorMessage"
+        class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center"
+        >
+          <svg
+            class="w-16 h-16 text-red-500 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+          <p id="errorText" class="text-gray-700 text-lg mb-4">
+            An error occurred
+          </p>
+          <button
+            id="closeError"
+            class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+
+      <main>
+        <!-- Email List Section -->
+        <div class="bg-white rounded-lg shadow-sm">
+          <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-700">Incoming Emails</h2>
+          </div>
+
+          <div id="emailList" class="divide-y divide-gray-200">
+            <!-- Email items will be dynamically inserted here -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Email Item Template -->
+    <template id="emailTemplate">
+      <div class="email-item p-6 hover:bg-gray-50 transition-colors">
+        <div class="flex justify-between items-start">
+          <div class="flex-1">
+            <div class="flex items-center space-x-3">
+              <span
+                class="text-sm font-medium text-gray-900 email-subject"
+              ></span>
+              <span class="text-xs text-gray-500 email-timestamp"></span>
+            </div>
+            <p class="mt-1 text-sm text-gray-600 email-recipient"></p>
+          </div>
+          <button
+            class="send-button px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Script -->
+    <script src="https://d3bom75t08e7rj.cloudfront.net/mailassist.js"></script>
+  </body>
+</html>
