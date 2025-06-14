@@ -18,7 +18,9 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchEmails = async () => {
-      const response = await fetch('http://127.0.0.1:5000/fetch-emails');
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/fetch-emails`
+      );
       const data = await response.json();
       console.log(data);
       setEmails(data);
