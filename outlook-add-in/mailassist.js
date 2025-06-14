@@ -100,13 +100,16 @@ async function sendEmailToAPI(emailData) {
   try {
     showLoadingSpinner();
     console.log('Making API request to http://127.0.0.1:5000/add-email');
-    const response = await fetch('http://127.0.0.1:5000/add-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailData),
-    });
+    const response = await fetch(
+      'https://7afe-2607-fb91-3228-46dc-9d64-6a18-f18a-afe7.ngrok-free.app/add-email',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData),
+      }
+    );
 
     console.log('API response status:', response.status);
     if (!response.ok) {
@@ -210,6 +213,29 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('closeError').addEventListener('click', () => {
     hideErrorMessage();
   });
+
+  // Test Local API button
+  const testLocalApiButton = document.getElementById('testLocalApiButton');
+  if (testLocalApiButton) {
+    testLocalApiButton.addEventListener('click', async () => {
+      const resultDiv = document.getElementById('testLocalApiResult');
+      resultDiv.textContent = 'Loading...';
+      try {
+        // Change the URL if your backend is not on 127.0.0.1:5000
+        const response = await fetch(
+          'https://7afe-2607-fb91-3228-46dc-9d64-6a18-f18a-afe7.ngrok-free.app/fetch-emails'
+        );
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        resultDiv.textContent = 'Success! See popup for details.';
+        // Show the data in a popup/modal
+        showErrorMessage('Fetched emails: ' + JSON.stringify(data, null, 2));
+      } catch (error) {
+        resultDiv.textContent = '';
+        showErrorMessage('Local API test failed: ' + (error.message || error));
+      }
+    });
+  }
 });
 
 Office.initialize = function (reason) {
