@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Star Wars Films</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 2em;
+      }
+      #result {
+        margin-top: 1em;
+      }
+      .film {
+        margin-bottom: 1em;
+        padding: 1em;
+        border: 1px solid #eee;
+        border-radius: 6px;
+      }
+      .film-title {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Star Wars Films</h1>
+    <button id="fetchSwapi">Fetch Films</button>
+    <div id="result"></div>
+    <script src="swapi.js"></script>
+  </body>
+</html>
