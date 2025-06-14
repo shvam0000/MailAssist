@@ -7,23 +7,29 @@ interface EmailData {
   subject: string;
   body: string;
   sender: string;
-  recipients: string[];
-  receivedAt: string;
+  recipients?: string[];
+  recipient?: string;
+  timestamp: string;
 }
 
 interface EmailAccordionProps {
   email: EmailData;
+  formatDate: (date: string) => string;
 }
 
-const EmailAccordion: React.FC<EmailAccordionProps> = ({ email }) => {
+const EmailAccordion: React.FC<EmailAccordionProps> = ({
+  email,
+  formatDate,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleAccordion = () => setIsOpen((prev) => !prev);
 
-  const formattedDate = new Date(email.receivedAt).toLocaleString(undefined, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
+  const recipients = Array.isArray(email.recipients)
+    ? email.recipients
+    : email.recipient
+    ? [email.recipient]
+    : [];
 
   return (
     <div
@@ -46,16 +52,20 @@ const EmailAccordion: React.FC<EmailAccordionProps> = ({ email }) => {
       </div>
 
       {isOpen && (
-        <div className="text-sm text-gray-600 mt-2 space-y-1">
+        <div className="text-sm text-gray-600 mt-2 space-y-1 overflow-y-auto max-h-[300px]">
           <p>
             <span className="text-gray-500">Recipients:</span>{' '}
-            <span className="text-blue-500">{email.recipients.join(', ')}</span>
+            <span className="text-blue-500">
+              {recipients.length > 0 ? recipients.join(', ') : 'No recipients'}
+            </span>
           </p>
           <p>
-            <span className="text-gray-500">Received Date:</span>{' '}
-            <span className="text-blue-500">{formattedDate}</span>
+            <span className="text-gray-500">Timestamp:</span>{' '}
+            <span className="text-blue-500">{formatDate(email.timestamp)}</span>
           </p>
-          <p className="mt-3 font-normal">{email.body}</p>
+          <p className="mt-3 font-normal">
+            {email.body.replace(/<[^>]+>/g, '').slice(0, 200)}
+          </p>
         </div>
       )}
     </div>

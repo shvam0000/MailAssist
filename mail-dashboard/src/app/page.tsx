@@ -8,7 +8,8 @@ interface EmailData {
   body: string;
   sender: string;
   recipients: string[];
-  receivedAt: string;
+  recipient: string;
+  timestamp: string;
 }
 
 const HomePage = () => {
@@ -19,10 +20,17 @@ const HomePage = () => {
     const fetchEmails = async () => {
       const response = await fetch('http://127.0.0.1:5000/fetch-emails');
       const data = await response.json();
+      console.log(data);
       setEmails(data);
     };
     fetchEmails();
   }, []);
+
+  // format 2025-06-14T03:22:33.751Z
+  const formatDate = (date: string) => {
+    const dateObj = new Date(date);
+    return dateObj.toLocaleString();
+  };
 
   const filteredEmails = emails.filter((email) => {
     const searchLower = searchQuery.toLowerCase();
@@ -56,7 +64,7 @@ const HomePage = () => {
         </div>
         <div>
           {filteredEmails.map((email, index) => (
-            <EmailAccordion key={index} email={email} />
+            <EmailAccordion key={index} email={email} formatDate={formatDate} />
           ))}
         </div>
       </div>
