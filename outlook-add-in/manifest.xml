@@ -7,14 +7,13 @@
   xsi:type="MailApp">
 
   <Id>fc188889-7206-4d15-9968-7a4966f7f4ca</Id>
-  <Version>1.0.0.5</Version>
+  <Version>1.0.0.6</Version>
   <ProviderName>MailAssist</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="MailAssist" />
   <Description DefaultValue="MailAssist helps you get data from your emails."/>
   <IconUrl DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png" />
   <HighResolutionIconUrl DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png" />
-  <SupportUrl DefaultValue="https://www.contoso.com/help" />
 
   <Hosts>
     <Host Name="Mailbox" />
