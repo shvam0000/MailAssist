@@ -104,9 +104,9 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-16.png"/>
-        <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-32.png"/>
-        <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-80.png"/>
+        <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
+        <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
+        <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="functionFile.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/mailassist.html"/>
@@ -219,9 +219,9 @@
       </Hosts>
       <Resources>
         <bt:Images>
-          <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-16.png"/>
-          <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-32.png"/>
-          <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-80.png"/>
+          <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
+          <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
+          <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
         </bt:Images>
         <bt:Urls>
           <bt:Url id="functionFile.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/mailassist.html"/>
