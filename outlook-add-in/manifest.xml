@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Created:cb85b80c-f585-40ff-8bfc-12ff4d0e34a9-->
 <OfficeApp
   xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
   xsi:type="MailApp">
+
   <Id>fc188889-7206-4d15-9968-7a4966f7f4ca</Id>
   <Version>1.0.0.5</Version>
   <ProviderName>MailAssist</ProviderName>
@@ -14,6 +14,8 @@
   <Description DefaultValue="MailAssist helps you get data from your emails."/>
   <IconUrl DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png" />
   <HighResolutionIconUrl DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png" />
+  <SupportUrl DefaultValue="https://www.contoso.com/help" />
+
   <Hosts>
     <Host Name="Mailbox" />
   </Hosts>
@@ -65,10 +67,14 @@
                   </Icon>
                   <Items>
                     <Item id="getDataButton1">
-                      <Label resid="starWarsPaneButton.Label"/> <Supertip>
-                        <Title resid="starWarsPaneButton.Label"/> <Description resid="starWarsPaneButton.Tooltip"/> </Supertip>
+                      <Label resid="starWarsPaneButton.Label"/>
+                      <Supertip>
+                        <Title resid="starWarsPaneButton.Label"/>
+                        <Description resid="starWarsPaneButton.Tooltip"/>
+                      </Supertip>
                       <Action xsi:type="ShowTaskpane">
-                        <SourceLocation resid="starWarsTaskpane.Url"/> </Action>
+                        <SourceLocation resid="starWarsTaskpane.Url"/>
+                      </Action>
                     </Item>
                     <Item id="getDataButton2">
                       <Label resid="paneButton.Label"/>
@@ -78,6 +84,15 @@
                       </Supertip>
                       <Action xsi:type="ShowTaskpane">
                         <SourceLocation resid="taskpane.Url"/>
+                      </Action>
+                    </Item>
+                    <Item id="getCatFactsButton"> <Label resid="catFactsPaneButton.Label"/>
+                      <Supertip>
+                        <Title resid="catFactsPaneButton.Label"/>
+                        <Description resid="catFactsPaneButton.Tooltip"/>
+                      </Supertip>
+                      <Action xsi:type="ShowTaskpane">
+                        <SourceLocation resid="catFactsTaskpane.Url"/>
                       </Action>
                     </Item>
                   </Items>
@@ -90,23 +105,26 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
-        <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
-        <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
+        <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-16.png"/>
+        <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-32.png"/>
+        <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="functionFile.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/mailassist.html"/>
         <bt:Url id="taskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/mailassist.html"/>
-        <bt:Url id="starWarsTaskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/swapi.html"/> </bt:Urls>
+        <bt:Url id="starWarsTaskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/swapi.html"/>
+        <bt:Url id="catFactsTaskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/cats.html"/> </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="group.Label" DefaultValue="MailAssist"/>
         <bt:String id="menu.Label" DefaultValue="MailAssist Actions"/>
         <bt:String id="paneButton.Label" DefaultValue="Get Email Data"/>
-        <bt:String id="starWarsPaneButton.Label" DefaultValue="Get Star Wars Data"/> </bt:ShortStrings>
+        <bt:String id="starWarsPaneButton.Label" DefaultValue="Get Star Wars Data"/>
+        <bt:String id="catFactsPaneButton.Label" DefaultValue="Get Cat Facts"/> </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="menu.Tooltip" DefaultValue="Access MailAssist actions."/>
         <bt:String id="paneButton.Tooltip" DefaultValue="Opens the MailAssist task pane to view and extract data from the current email."/>
-        <bt:String id="starWarsPaneButton.Tooltip" DefaultValue="Opens the Star Wars data task pane."/> </bt:LongStrings>
+        <bt:String id="starWarsPaneButton.Tooltip" DefaultValue="Opens the Star Wars data task pane."/>
+        <bt:String id="catFactsPaneButton.Tooltip" DefaultValue="Opens the Cat Facts task pane."/> </bt:LongStrings>
     </Resources>
 
     <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
@@ -136,10 +154,14 @@
                     </Icon>
                     <Items>
                       <Item id="getDataButton1">
-                        <Label resid="starWarsPaneButton.Label"/> <Supertip>
-                          <Title resid="starWarsPaneButton.Label"/> <Description resid="starWarsPaneButton.Tooltip"/> </Supertip>
+                        <Label resid="starWarsPaneButton.Label"/>
+                        <Supertip>
+                          <Title resid="starWarsPaneButton.Label"/>
+                          <Description resid="starWarsPaneButton.Tooltip"/>
+                        </Supertip>
                         <Action xsi:type="ShowTaskpane">
-                          <SourceLocation resid="starWarsTaskpane.Url"/> <SupportsPinning>true</SupportsPinning>
+                          <SourceLocation resid="starWarsTaskpane.Url"/>
+                          <SupportsPinning>true</SupportsPinning>
                         </Action>
                       </Item>
                       <Item id="getDataButton2">
@@ -150,6 +172,16 @@
                         </Supertip>
                         <Action xsi:type="ShowTaskpane">
                           <SourceLocation resid="taskpane.Url"/>
+                          <SupportsPinning>true</SupportsPinning>
+                        </Action>
+                      </Item>
+                      <Item id="getCatFactsButton"> <Label resid="catFactsPaneButton.Label"/>
+                        <Supertip>
+                          <Title resid="catFactsPaneButton.Label"/>
+                          <Description resid="catFactsPaneButton.Tooltip"/>
+                        </Supertip>
+                        <Action xsi:type="ShowTaskpane">
+                          <SourceLocation resid="catFactsTaskpane.Url"/>
                           <SupportsPinning>true</SupportsPinning>
                         </Action>
                       </Item>
@@ -188,23 +220,26 @@
       </Hosts>
       <Resources>
         <bt:Images>
-          <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
-          <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
-          <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon.png"/>
+          <bt:Image id="icon.16" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-16.png"/>
+          <bt:Image id="icon.32" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-32.png"/>
+          <bt:Image id="icon.80" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/icon-80.png"/>
         </bt:Images>
         <bt:Urls>
           <bt:Url id="functionFile.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/mailassist.html"/>
           <bt:Url id="taskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/mailassist.html"/>
-          <bt:Url id="starWarsTaskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/swapi.html"/> </bt:Urls>
+          <bt:Url id="starWarsTaskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/swapi.html"/>
+          <bt:Url id="catFactsTaskpane.Url" DefaultValue="https://d3bom75t08e7rj.cloudfront.net/cats.html"/> </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="group.Label" DefaultValue="MailAssist"/>
           <bt:String id="menu.Label" DefaultValue="MailAssist Actions"/>
           <bt:String id="paneButton.Label" DefaultValue="Get Email Data"/>
-          <bt:String id="starWarsPaneButton.Label" DefaultValue="Get Star Wars Data"/> </bt:ShortStrings>
+          <bt:String id="starWarsPaneButton.Label" DefaultValue="Get Star Wars Data"/>
+          <bt:String id="catFactsPaneButton.Label" DefaultValue="Get Cat Facts"/> </bt:ShortStrings>
         <bt:LongStrings>
           <bt:String id="menu.Tooltip" DefaultValue="Access MailAssist actions."/>
           <bt:String id="paneButton.Tooltip" DefaultValue="Opens the MailAssist task pane to view and extract data from the current email."/>
-          <bt:String id="starWarsPaneButton.Tooltip" DefaultValue="Opens the Star Wars data task pane."/> </bt:LongStrings>
+          <bt:String id="starWarsPaneButton.Tooltip" DefaultValue="Opens the Star Wars data task pane."/>
+          <bt:String id="catFactsPaneButton.Tooltip" DefaultValue="Opens the Cat Facts task pane."/> </bt:LongStrings>
       </Resources>
     </VersionOverrides>
   </VersionOverrides>
