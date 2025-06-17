@@ -133,9 +133,31 @@
           >
             Send
           </button>
+          <button
+            class="summarize-button ml-2 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700"
+          >
+            Summarize
+          </button>
         </div>
       </div>
     </template>
+
+    <div
+      id="summaryModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg max-w-xl w-full">
+        <h2 class="text-lg font-bold mb-2">Email Summary</h2>
+        <p id="summaryText" class="mb-2 text-gray-700"></p>
+        <p id="summaryTags" class="text-sm text-blue-600"></p>
+        <button
+          onclick="document.getElementById('summaryModal').classList.add('hidden')"
+          class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Close
+        </button>
+      </div>
+    </div>
 
     <!-- Script -->
     <script src="https://d3bom75t08e7rj.cloudfront.net/mailassist.js"></script>

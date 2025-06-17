@@ -101,7 +101,7 @@ async function sendEmailToAPI(emailData) {
     showLoadingSpinner();
     console.log('Making API request to http://127.0.0.1:5000/add-email');
     const response = await fetch(
-      'https://7afe-2607-fb91-3228-46dc-9d64-6a18-f18a-afe7.ngrok-free.app/add-email',
+      'https://athena-addin-4ba193b14103.herokuapp.com/add-email',
       {
         method: 'POST',
         headers: {
@@ -205,6 +205,27 @@ function updateEmailList(emailData) {
   console.log('Added email item to list');
 }
 
+const sendButton = emailItem.querySelector('.send-button');
+if (sendButton) {
+  sendButton.addEventListener('click', async () => {
+    try {
+      sendButton.disabled = true;
+      sendButton.textContent = 'Saving...';
+      await sendEmailToAPI(emailData); // POST to /add-email
+      sendButton.textContent = 'Saved!';
+      sendButton.classList.remove('bg-blue-600');
+      sendButton.classList.add('bg-emerald-700');
+      showSuccessMessage();
+    } catch (error) {
+      console.error('Error saving email:', error);
+      sendButton.textContent = 'Failed';
+      sendButton.classList.remove('bg-blue-600');
+      sendButton.classList.add('bg-red-600');
+      showErrorMessage(error.message || 'Failed to save email.');
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('goToDashboard').addEventListener('click', () => {
     hideSuccessMessage();
@@ -223,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         // Change the URL if your backend is not on 127.0.0.1:5000
         const response = await fetch(
-          'https://7afe-2607-fb91-3228-46dc-9d64-6a18-f18a-afe7.ngrok-free.app/fetch-emails'
+          'https://athena-addin-4ba193b14103.herokuapp.com/fetch-emails'
         );
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
@@ -268,3 +289,42 @@ async function loadEmailDetailsAndReport() {
     showErrorMessage('Failed to load email data: ' + error.message);
   }
 }
+
+async function summarizeEmail(emailData) {
+  showLoadingSpinner();
+  try {
+    const response = await fetch(
+      'https://athena-addin-4ba193b14103.herokuapp.com/process-email-agent',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: emailData.body }),
+      }
+    );
+
+    if (!response.ok) throw new Error('Summarization API failed');
+    return await response.json(); // { summary, tags }
+  } finally {
+    hideLoadingSpinner();
+  }
+}
+
+const summarizeButton = emailItem.querySelector('.summarize-button');
+summarizeButton.addEventListener('click', async () => {
+  try {
+    summarizeButton.disabled = true;
+    summarizeButton.textContent = 'Summarizing...';
+    const result = await summarizeEmail(emailData.body);
+    summarizeButton.textContent = 'Done!';
+    summarizeButton.classList.replace('bg-blue-600', 'bg-green-700');
+
+    document.getElementById('summaryText').textContent = result.summary;
+    document.getElementById('summaryTags').textContent =
+      'Tags: ' + result.tags.join(', ');
+    document.getElementById('summaryModal').classList.remove('hidden');
+  } catch (error) {
+    summarizeButton.textContent = 'Failed';
+    summarizeButton.classList.replace('bg-blue-600', 'bg-red-600');
+    showErrorMessage(error.message || 'Failed to summarize email');
+  }
+});
