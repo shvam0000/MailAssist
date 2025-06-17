@@ -102,39 +102,6 @@
         </div>
       </div>
 
-      <div
-        id="slackSuccessMessage"
-        class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50"
-      >
-        <div
-          class="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center text-center"
-        >
-          <svg
-            class="w-16 h-16 text-green-500 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 13l4 4L19 7"
-            ></path>
-          </svg>
-          <h2 class="text-xl font-semibold text-slate-800 mb-2">Success!</h2>
-          <p class="text-slate-600 text-lg mb-6">
-            Email was forwarded to Slack successfully.
-          </p>
-          <button
-            id="closeSlackSuccess"
-            class="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-
       <main>
         <div id="emailList" class="space-y-4"></div>
       </main>
@@ -178,11 +145,6 @@
                 class="summarize-button w-28 text-center px-4 py-2 bg-slate-200 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition-all duration-200 ease-in-out"
               >
                 Summarize
-              </button>
-              <button
-                class="forward-slack-button w-28 text-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 ease-in-out"
-              >
-                Forward to Slack
               </button>
             </div>
           </div>
