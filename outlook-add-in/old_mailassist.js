@@ -99,7 +99,9 @@ async function sendEmailToAPI(emailData) {
   console.log('Starting sendEmailToAPI with data:', emailData);
   try {
     showLoadingSpinner();
-    console.log('Making API request to http://127.0.0.1:5000/add-email');
+    console.log(
+      'Making API request to https://athena-addin-4ba193b14103.herokuapp.com/add-email'
+    );
     const response = await fetch(
       'https://athena-addin-4ba193b14103.herokuapp.com/add-email',
       {
@@ -131,128 +133,77 @@ async function sendEmailToAPI(emailData) {
   }
 }
 
-async function summarizeEmail(emailData) {
-  showLoadingSpinner();
-  try {
-    const response = await fetch(
-      'https://athena-addin-4ba193b14103.herokuapp.com/process-email-agent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: emailData.body, // must match your curl
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(
-        `Summarization API failed: ${response.status} - ${errText}`
-      );
-    }
-
-    const data = await response.json();
-    console.log('Summarize API success:', data);
-    return data; // { summary, tags }
-  } catch (error) {
-    console.error('Error during summarization:', error);
-    throw error;
-  } finally {
-    hideLoadingSpinner();
-  }
-}
-
 // Update the UI with email data
 function updateEmailList(emailData) {
   console.log('Starting updateEmailList with data:', emailData);
   const emailList = document.getElementById('emailList');
   const template = document.getElementById('emailTemplate');
 
-  // Clone the template content
-  const emailCard = template.content.cloneNode(true);
+  const emailItem = template.content.cloneNode(true);
 
-  // --- Select all necessary elements from the cloned card ---
-  const sendButton = emailCard.querySelector('.send-button');
-  const summarizeButton = emailCard.querySelector('.summarize-button');
-  const summaryModal = emailCard.querySelector('.summaryModal');
-  const summaryText = emailCard.querySelector('.summaryText');
-  const summaryTags = emailCard.querySelector('.summaryTags');
-  const closeSummaryButton = emailCard.querySelector('.closeSummaryButton');
-
-  // --- Populate the card with email data ---
   const updateElement = (selector, content) => {
-    const element = emailCard.querySelector(selector);
-    if (element) element.textContent = content;
+    const element = emailItem.querySelector(selector);
+    if (element) {
+      element.textContent = content;
+    } else {
+      console.warn(`Element not found: ${selector}`);
+    }
   };
 
   updateElement('.email-subject', emailData.subject || 'No Subject');
-  updateElement('.email-recipient', `To: ${emailData.recipient || 'Unknown'}`);
-  updateElement('.email-sender', `From: ${emailData.sender || 'Unknown'}`);
+  updateElement(
+    '.email-recipient',
+    `To: ${emailData.recipient || 'Unknown recipient'}`
+  );
+  updateElement(
+    '.email-sender',
+    `From: ${emailData.sender || 'Unknown sender'}`
+  );
   updateElement(
     '.email-timestamp',
     new Date(emailData.timestamp).toLocaleString()
   );
-  const bodyPreview =
-    emailData.body
-      .replace(/<[^>]*>/g, '')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .substring(0, 100) + '...';
-  updateElement('.email-body-preview', bodyPreview);
 
-  // --- Attach Event Listeners ---
+  const bodyPreview = emailData.body
+    ? emailData.body
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .substring(0, 100) + '...'
+    : 'No body content';
+
+  // add Subject to the email item
+  updateElement('.email-body-preview', `Subject: ${bodyPreview}`);
+  // updateElement('.email-body-preview', bodyPreview);
+
+  const sendButton = emailItem.querySelector('.send-button');
   if (sendButton) {
     sendButton.addEventListener('click', async () => {
-      // Your existing send logic here...
       console.log('Send button clicked');
       try {
         sendButton.disabled = true;
         sendButton.textContent = 'Sending...';
+        console.log('Sending email data to API');
         await sendEmailToAPI(emailData);
         sendButton.textContent = 'Sent!';
+        sendButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
         sendButton.classList.add('bg-green-600');
         showSuccessMessage();
       } catch (error) {
+        console.error('Error in send button click handler:', error);
         sendButton.textContent = 'Failed';
+        sendButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
         sendButton.classList.add('bg-red-600');
-        showErrorMessage(error.message || 'Failed to process email.');
+        showErrorMessage(
+          error.message || 'Failed to process email. Please try again.'
+        );
       }
     });
+  } else {
+    console.warn('Send button not found in template');
   }
 
-  if (summarizeButton) {
-    summarizeButton.addEventListener('click', async () => {
-      try {
-        summarizeButton.disabled = true;
-        summarizeButton.textContent = 'Summarizing...';
-        const result = await summarizeEmail(emailData);
-
-        summaryText.textContent = result.summary || 'No summary available.';
-        summaryTags.textContent =
-          'Tags: ' + (result.tags?.join(', ') || 'None');
-        summaryModal.classList.remove('hidden'); // Show the modal
-
-        summarizeButton.textContent = 'Done!';
-        summarizeButton.classList.replace('bg-blue-600', 'bg-green-700');
-      } catch (error) {
-        summarizeButton.textContent = 'Failed';
-        summarizeButton.classList.replace('bg-blue-600', 'bg-red-600');
-        showErrorMessage(error.message || 'Failed to summarize email');
-      }
-    });
-  }
-
-  if (closeSummaryButton) {
-    closeSummaryButton.addEventListener('click', () => {
-      summaryModal.classList.add('hidden'); // Hide the modal
-    });
-  }
-
-  // --- Finally, append the fully prepared card to the DOM ---
-  emailList.appendChild(emailCard);
+  emailList.appendChild(emailItem);
   console.log('Added email item to list');
 }
 
