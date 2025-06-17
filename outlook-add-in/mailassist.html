@@ -12,16 +12,16 @@
     <!-- Then your other scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="bg-gray-50">
+  <body class="bg-slate-100 font-sans">
     <div class="container mx-auto px-4 py-8">
-      <header class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">MailAssist</h1>
+      <header class="mb-6">
+        <h1 class="text-3xl font-bold text-slate-800">MailAssist</h1>
+        <p class="text-sm text-slate-500">Currently viewing email details</p>
       </header>
 
-      <!-- Loading Spinner -->
       <div
         id="loadingSpinner"
-        class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+        class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50"
       >
         <div
           class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center"
@@ -29,17 +29,16 @@
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
           ></div>
-          <p class="text-gray-700">Processing your request...</p>
+          <p class="text-slate-700">Processing your request...</p>
         </div>
       </div>
 
-      <!-- Success Message -->
       <div
         id="successMessage"
-        class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+        class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50"
       >
         <div
-          class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center"
+          class="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center text-center"
         >
           <svg
             class="w-16 h-16 text-green-500 mb-4"
@@ -54,25 +53,26 @@
               d="M5 13l4 4L19 7"
             ></path>
           </svg>
-          <p class="text-gray-700 text-lg mb-4">
-            Email successfully processed!
+          <h2 class="text-xl font-semibold text-slate-800 mb-2">Success!</h2>
+          <p class="text-slate-600 text-lg mb-6">
+            Email successfully processed.
           </p>
-          <button
+          <a
+            href="https://mail-assist-iota.vercel.app/"
             id="goToDashboard"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md"
           >
-            <a href="https://mail-assist-iota.vercel.app/">Go to Dashboard</a>
-          </button>
+            Go to Dashboard
+          </a>
         </div>
       </div>
 
-      <!-- Error Message -->
       <div
         id="errorMessage"
-        class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+        class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50"
       >
         <div
-          class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center"
+          class="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center text-center"
         >
           <svg
             class="w-16 h-16 text-red-500 mb-4"
@@ -87,12 +87,15 @@
               d="M6 18L18 6M6 6l12 12"
             ></path>
           </svg>
-          <p id="errorText" class="text-gray-700 text-lg mb-4">
-            An error occurred
+          <h2 class="text-xl font-semibold text-slate-800 mb-2">
+            An Error Occurred
+          </h2>
+          <p id="errorText" class="text-slate-600 text-lg mb-6 break-all">
+            Error details here
           </p>
           <button
             id="closeError"
-            class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            class="px-5 py-2.5 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors duration-200"
           >
             Close
           </button>
@@ -100,44 +103,75 @@
       </div>
 
       <main>
-        <!-- Email List Section -->
-        <div class="bg-white rounded-lg shadow-sm">
-          <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-700">Incoming Emails</h2>
-          </div>
-
-          <div id="emailList" class="divide-y divide-gray-200">
-            <!-- Email items will be dynamically inserted here -->
-          </div>
-        </div>
+        <div id="emailList" class="space-y-4"></div>
       </main>
     </div>
 
-    <!-- Email Item Template -->
     <template id="emailTemplate">
-      <div class="email-item p-6 hover:bg-gray-50 transition-colors">
-        <div class="flex justify-between items-start">
+      <div
+        class="email-item bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 ease-in-out"
+      >
+        <div class="flex flex-col md:flex-row justify-between">
           <div class="flex-1">
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-between">
+              <h3
+                class="text-lg font-semibold text-slate-800 email-subject"
+              ></h3>
               <span
-                class="text-sm font-medium text-gray-900 email-subject"
+                class="text-xs text-slate-400 ml-4 flex-shrink-0 email-timestamp"
               ></span>
-              <span class="text-xs text-gray-500 email-timestamp"></span>
             </div>
-            <p class="mt-1 text-sm text-gray-600 email-recipient"></p>
-            <p class="mt-1 text-sm text-gray-600 email-sender"></p>
-            <p class="mt-2 text-sm text-gray-500 email-body-preview"></p>
+            <div class="mt-2 text-sm">
+              <p class="text-slate-500 email-sender"></p>
+              <p class="text-slate-500 email-recipient"></p>
+            </div>
+            <p
+              class="mt-4 text-sm text-slate-600 leading-relaxed email-body-preview"
+            ></p>
           </div>
-          <button
-            class="send-button px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+
+          <div
+            class="flex flex-row-reverse md:flex-col mt-4 md:mt-0 md:ml-6 flex-shrink-0"
           >
-            Send
-          </button>
+            <div
+              class="flex md:flex-col space-x-2 space-x-reverse md:space-x-0 md:space-y-2"
+            >
+              <button
+                class="send-button w-28 text-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 ease-in-out"
+              >
+                Send
+              </button>
+              <button
+                class="summarize-button w-28 text-center px-4 py-2 bg-slate-200 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition-all duration-200 ease-in-out"
+              >
+                Summarize
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="summaryModal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full mx-4">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">Email Summary</h2>
+            <div class="bg-slate-50 p-4 rounded-md max-h-64 overflow-y-auto">
+              <p class="summaryText text-slate-700"></p>
+            </div>
+            <div class="mt-4">
+              <p class="summaryTags text-sm text-blue-600"></p>
+            </div>
+            <div class="mt-6 text-right">
+              <button
+                class="closeSummaryButton px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </template>
-
-    <!-- Script -->
     <script src="https://d3bom75t08e7rj.cloudfront.net/mailassist.js"></script>
   </body>
 </html>
