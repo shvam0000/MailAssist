@@ -177,53 +177,10 @@ function updateEmailList(emailData) {
   // --- Select all necessary elements from the cloned card ---
   const sendButton = emailCard.querySelector('.send-button');
   const summarizeButton = emailCard.querySelector('.summarize-button');
-  const forwardSlackButton = emailCard.querySelector('.forward-slack-button');
   const summaryModal = emailCard.querySelector('.summaryModal');
   const summaryText = emailCard.querySelector('.summaryText');
   const summaryTags = emailCard.querySelector('.summaryTags');
   const closeSummaryButton = emailCard.querySelector('.closeSummaryButton');
-
-  if (forwardSlackButton) {
-    forwardSlackButton.addEventListener('click', async () => {
-      try {
-        forwardSlackButton.disabled = true;
-        forwardSlackButton.textContent = 'Forwarding...';
-
-        const response = await fetch(
-          'https://athena-addin-4ba193b14103.herokuapp.com/forward-to-slack',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              sender: emailData.sender,
-              subject: emailData.subject,
-              body: emailData.body,
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          const err = await response.text();
-          throw new Error(
-            `Slack forwarding failed: ${response.status} - ${err}`
-          );
-        }
-
-        forwardSlackButton.textContent = 'Done!';
-        forwardSlackButton.classList.replace('bg-green-600', 'bg-green-800');
-        // showSuccessMessage();
-        document
-          .getElementById('slackSuccessMessage')
-          .classList.remove('hidden');
-      } catch (error) {
-        forwardSlackButton.textContent = 'Failed';
-        forwardSlackButton.classList.replace('bg-green-600', 'bg-red-600');
-        showErrorMessage(error.message || 'Slack forwarding failed');
-      }
-    });
-  }
 
   // --- Populate the card with email data ---
   const updateElement = (selector, content) => {
@@ -307,13 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('closeError').addEventListener('click', () => {
     hideErrorMessage();
   });
-
-  const closeSlackSuccess = document.getElementById('closeSlackSuccess');
-  if (closeSlackSuccess) {
-    closeSlackSuccess.addEventListener('click', () => {
-      document.getElementById('slackSuccessMessage').classList.add('hidden');
-    });
-  }
 
   // Test Local API button
   const testLocalApiButton = document.getElementById('testLocalApiButton');
