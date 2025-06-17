@@ -69,13 +69,13 @@ def process_email_agent():
 
     tags = generate_tags(summary)
 
-    record = {
-        "original_text": content,
-        "summary": summary,
-        "tags": tags
-    }
+    # record = {
+    #     "original_text": content,
+    #     "summary": summary,
+    #     "tags": tags
+    # }
 
-    collection.insert_one(record)
+    # collection.insert_one(record)
     return jsonify({"summary": summary, "tags": tags})
 
 if __name__ == '__main__':
